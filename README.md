@@ -17,28 +17,28 @@ Detailed instructions for each task are in the comments of the corresponding fil
 
 ### Task 0: Initialize Firebase
 pages/index.tsx
-- [ ] Create a Firebase project on Firebase Console
-- [ ] Enable Google Sign in
-- [ ] Add Firebase to the project
-- [ ] Initialize Firebase
+- [x] Create a Firebase project on Firebase Console
+- [x] Enable Google Sign in
+- [x] Add Firebase to the project
+- [x] Initialize Firebase
 > Documentation: https://firebase.google.com/docs/auth/web/start
 
 ### Task 1: Implement Google Sign in with Firebase
 pages/index.tsx
-- [ ] Implement Google Sign in with Google button
-- [ ] Redirect to the Signed In page to show random programming jokes
+- [x] Implement Google Sign in with Google button
+- [x] Redirect to the Signed In page to show random programming jokes
 > Documentation: https://firebase.google.com/docs/auth/web/google-signin
 
 ### Task 2: Fetch programming jokes from the API
 pages/signed-in.tsx
-- [ ] Fetch programming jokes from the API using getServerSideProps
+- [x] Fetch programming jokes from the API using getServerSideProps
 > Learn more about Nextjs Data Fetching: https://nextjs.org/docs/basic-features/data-fetching
-- [ ] Pass the joke to the page on the client side
+- [x] Pass the joke to the page on the client side
 > API URL: https://official-joke-api.appspot.com/jokes/programming/random
 
 ### Task 3: Display the programming joke
 pages/signed-in.tsx
-- [ ] Display the programming joke in your own way :)
+- [x] Display the programming joke in your own way :)
 
 ### (Optional) Task 4: Find a critical design flaw in the website
 No need to send me the problem and fix, just let me know what you find in the interview
