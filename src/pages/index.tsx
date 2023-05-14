@@ -4,11 +4,12 @@ import {
     getAuth,
     GoogleAuthProvider,
     signInWithRedirect,
+    onAuthStateChanged,
     getRedirectResult,
 } from "firebase/auth";
 import { useRouter } from "next/router";
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+import { useEffect } from "react";
 
 // Task 0: Initialize Firebase
 // Replace the following with your app's Firebase project configuration
@@ -24,48 +25,44 @@ const firebaseConfig = {
     measurementId: "G-YH0XRT6NC3",
 };
 
-// GoogleAuthProvider instance
-// Specify additional OAuth 2.0 scopes that you want to request from the authentication provider.
+const app = initializeApp(firebaseConfig);
+
+// Firebase Auth instance
+const auth = getAuth(app);
 
 export default function Home() {
     //Next.js router
     const router = useRouter();
 
-    // Task 1: Implement Google Sign in with Firebase
-    // https://firebase.google.com/docs/auth/web/google-signin 
-    // async is used to simplify "catching" the result process and make sure that no resources are wasted
-    const signIn = async () => {
+    // you might have to wait several seconds for the redirect process as my internet in my home country is pretty slow, and the project is hosted using my own laptop which inevitably uses my home's slow internet speed
+    
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User signed in, you can get redirect result here if needed.
+                const result = await getRedirectResult(auth);
+                // You can access additional user information here if needed
+                // const additionalUserInfo = result.additionalUserInfo;
+                router.push("/signed-in");
+            } else {
+                // User is signed out.
+                // Show sign in screen with button.
+            }
+        });
+
+        // Cleanup subscription on unmount
+        return () => unsubscribe();
+    }, [router, auth]);
+
+    const signIn = () => {
         const provider = new GoogleAuthProvider();
-        provider.addScope("https://www.googleapis.com/auth/contacts.readonly");
         provider.setCustomParameters({
             login_hint: "user@example.com",
         });
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-
-        // Firebase Auth instance
-        const auth = getAuth(app);
         signInWithRedirect(auth, provider);
-        // Wait for the user to return from the redirect
-        // Wait for the user to return from the redirect
-
-        try {
-            const result = await getRedirectResult(auth);
-
-            // User successfully signed in.
-            // You can retrieve the Google user's info with result.user
-            // then use the Next.js router to redirect the user
-
-            // provide another fail-safe boolean mechanism to make sure that result is not Null 
-            if (result && result.user) {
-                router.push("/signed-in");
-            }
-        } catch (error) {
-            // Handle Errors here.
-            console.error(error);
-        }
-
     };
+    
+
 
     return (
         <>
@@ -91,8 +88,6 @@ export default function Home() {
                     </h1>
                     <h3>Sign in to see a random programming joke 😳</h3>
 
-                    {/* Button for user to sign in with Google */}
-                    {/* Task 1: Implement Google Sign in with Firebase */}
                     <GoogleButton
                         label={"Sign in with Google"}
                         type="light"
