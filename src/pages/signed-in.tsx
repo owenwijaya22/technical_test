@@ -1,27 +1,31 @@
-import {GetServerSideProps, InferGetServerSidePropsType} from "next";
+import { useState } from "react";
+import { GetServerSideProps, InferGetServerSidePropsType } from "next";
 
 export default function SignedIn({ joke }: InferGetServerSidePropsType<typeof getServerSideProps>) {
+  const [revealPunchline, setRevealPunchline] = useState(false);
+
   return (
     <div>
       <h1>Signed In</h1>
-      {/* Task 3: Your own presentation of the joke here (Free Style 😉 )*/}
 
-      {/* End of Task 3 */}
+      {/* Your own presentation of the joke here */}
+      <h2>Joke of the Day:</h2>
+      <p>{joke.setup}</p>
+
+      {revealPunchline && <p>{joke.punchline}</p>}
+
+      <button onClick={() => setRevealPunchline(true)}>Reveal Punchline</button>
+
+      {/* End of your presentation */}
     </div>
   )
-
 }
 
-// Task 2: Fetch random jokes from the API
-// https://official-joke-api.appspot.com/jokes/programming/random
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // Fetch data from external API and pass it to the page via props.joke
+  // Fetch data from external API
+  const res = await fetch('https://official-joke-api.appspot.com/jokes/programming/random');
+  const data = await res.json();
 
-  return {
-    props: {
-      joke: {
-
-      },
-    }, // will be passed to the page component as props
-  }
+  // Pass joke data to the page via props
+  return { props: { joke: data[0] } };
 }
